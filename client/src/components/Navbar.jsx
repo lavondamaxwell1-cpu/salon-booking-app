@@ -26,12 +26,41 @@ function Navbar() {
             Stylists
           </Link>
 
-          {user && (
+          {user?.role === "customer" && (
             <Link to="/my-appointments" className="hover:text-pink-100">
               Appointments
             </Link>
           )}
 
+          {user?.role === "stylist" && (
+            <>
+              <Link to="/stylist-dashboard" className="hover:text-pink-100">
+                Stylist Dashboard
+              </Link>
+
+              <Link
+                to="/create-stylist-profile"
+                className="hover:text-pink-100"
+              >
+                Create Profile
+              </Link>
+
+              <Link to="/edit-stylist-profile" className="hover:text-pink-100">
+                Edit Profile
+              </Link>
+            </>
+          )}
+
+          {user?.role === "admin" && (
+            <>
+              <Link to="/admin-dashboard" className="hover:text-pink-100">
+                Admin Dashboard
+              </Link>
+              <Link to="/manage-users" className="hover:text-pink-100">
+                Manage Users
+              </Link>
+            </>
+          )}
           {!user ? (
             <>
               <Link to="/login" className="hover:text-pink-100">

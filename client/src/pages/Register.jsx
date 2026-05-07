@@ -1,22 +1,35 @@
-// import React from 'react'
-
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { registerUser } from "../api/auth";
 
 function Register() {
-    const { login } = useAuth();
-    const navigate = useNavigate();
-    function handleSubmit(e) {
-      e.preventDefault();
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-      login({
-        name: "New User",
-        email: "new@email.com",
-        role: "customer",
-      });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("customer");
+  const [error, setError] = useState("");
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+
+    try {
+     const res = await registerUser({
+       name,
+       email,
+       password,
+     });
+      login(res.data);
       navigate("/");
+    } catch (error) {
+      setError(error.response?.data?.message || "Registration failed");
     }
+  }
+
   return (
     <div className="min-h-screen bg-pink-50 flex items-center justify-center px-6 py-16">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8">
@@ -26,28 +39,48 @@ function Register() {
 
         <h1 className="text-4xl font-bold text-gray-900 mb-8">Join GlowUp</h1>
 
+        {error && (
+          <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-5">
+            {error}
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
             type="text"
             placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            required
           />
 
           <input
             type="email"
             placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            required
           />
 
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            required
           />
 
-          <select className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400">
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+          >
             <option value="customer">Customer</option>
             <option value="stylist">Stylist</option>
+            
           </select>
 
           <button

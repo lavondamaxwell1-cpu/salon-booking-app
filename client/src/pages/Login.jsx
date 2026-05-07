@@ -1,22 +1,31 @@
-// import React from 'react'
-
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { loginUser } from "../api/auth";
 
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
 
-    login({
-      name: "Demo User",
-      email: "demo@email.com",
-      role: "customer",
-    });
+    try {
+      const res = await loginUser({
+        email,
+        password,
+      });
 
-    navigate("/");
+      login(res.data);
+      navigate("/");
+    } catch (error) {
+      setError(error.response?.data?.message || "Login failed");
+    }
   }
 
   return (
@@ -28,17 +37,29 @@ function Login() {
 
         <h1 className="text-4xl font-bold text-gray-900 mb-8">Login</h1>
 
+        {error && (
+          <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-5">
+            {error}
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
             type="email"
             placeholder="Email Address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            required
           />
 
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+            required
           />
 
           <button

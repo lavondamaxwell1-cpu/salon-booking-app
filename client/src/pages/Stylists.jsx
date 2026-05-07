@@ -1,34 +1,36 @@
-// import React from 'react'
-
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getStylists } from "../api/stylists";
 
 function Stylists() {
-  const stylists = [
-    {
-      id: 1,
-      name: "Jessica Rose",
-      specialty: "Braids Specialist",
-      price: "$80 - $200",
-      image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      name: "Maya Johnson",
-      specialty: "Silk Press & Natural Hair",
-      price: "$65 - $150",
-      image:
-        "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      name: "Tiana Brooks",
-      specialty: "Color & Extensions",
-      price: "$120 - $300",
-      image:
-        "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=800&auto=format&fit=crop",
-    },
-  ];
+  const [stylists, setStylists] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function fetchStylists() {
+      try {
+        const res = await getStylists();
+        setStylists(res.data);
+      } catch (error) {
+        setError(error.response?.data?.message || "Failed to load stylists");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchStylists();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-pink-50 flex items-center justify-center">
+        <p className="text-pink-500 font-semibold text-xl">
+          Loading stylists...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-pink-50 px-6 py-16">
@@ -47,39 +49,58 @@ function Stylists() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {stylists.map((stylist) => (
-            <div
-              key={stylist.id}
-              className="bg-white rounded-3xl shadow-lg overflow-hidden hover:-translate-y-2 transition"
-            >
-              <img
-                src={stylist.image}
-                alt={stylist.name}
-                className="w-full h-80 object-cover"
-              />
+        {error && (
+          <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-6">
+            {error}
+          </p>
+        )}
 
-              <div className="p-6">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {stylist.name}
-                </h2>
+        {stylists.length === 0 ? (
+          <div className="bg-white rounded-3xl shadow-lg p-10 text-center">
+            <h2 className="text-2xl font-bold text-gray-800 mb-3">
+              No stylists yet
+            </h2>
+            <p className="text-gray-500">
+              Stylists added in MongoDB will appear here.
+            </p>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {stylists.map((stylist) => (
+              <div
+                key={stylist._id}
+                className="bg-white rounded-3xl shadow-lg overflow-hidden hover:-translate-y-2 transition"
+              >
+                <img
+                  src={stylist.image}
+                  alt={stylist.name}
+                  className="w-full h-80 object-cover"
+                />
 
-                <p className="text-pink-500 font-semibold mt-2">
-                  {stylist.specialty}
-                </p>
+                <div className="p-6">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {stylist.name}
+                  </h2>
 
-                <p className="text-gray-600 mt-3">{stylist.price}</p>
+                  <p className="text-pink-500 font-semibold mt-2">
+                    {stylist.specialty}
+                  </p>
 
-                <Link
-                  to={`/stylists/${stylist.id}`}
-                  className="mt-6 inline-block w-full text-center bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-full font-semibold transition"
-                >
-                  View Profile
-                </Link>
+                  <p className="text-gray-600 mt-3">
+                    {stylist.services?.length || 0} services available
+                  </p>
+
+                  <Link
+                    to={`/stylists/${stylist._id}`}
+                    className="mt-6 inline-block w-full text-center bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-full font-semibold transition"
+                  >
+                    View Profile
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
