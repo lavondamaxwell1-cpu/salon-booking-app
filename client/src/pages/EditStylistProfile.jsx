@@ -16,6 +16,8 @@ function EditStylistProfile() {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [blockedDates, setBlockedDates] = useState([]);
+  const [newBlockedDate, setNewBlockedDate] = useState("");
 const daysOfWeek = [
   "Monday",
   "Tuesday",
@@ -47,6 +49,8 @@ const timeSlots = [
         setServices(res.data.services || []);
         setGallery(res.data.gallery || []);
         setAvailability(res.data.availability || []);
+        setBlockedDates(res.data.blockedDates || []);
+
       } catch (error) {
         console.log("UPLOAD ERROR:", error.response?.data || error.message);
         setError(
@@ -60,7 +64,19 @@ const timeSlots = [
     }
 
     fetchProfile();
-  }, []);
+  }, []);function addBlockedDate() {
+    if (!newBlockedDate) return;
+
+    if (!blockedDates.includes(newBlockedDate)) {
+      setBlockedDates([...blockedDates, newBlockedDate]);
+    }
+
+    setNewBlockedDate("");
+  }
+
+  function removeBlockedDate(date) {
+    setBlockedDates(blockedDates.filter((item) => item !== date));
+  }
 
   function handleServiceChange(index, field, value) {
     const updatedServices = [...services];
@@ -135,7 +151,7 @@ const timeSlots = [
         image,
         services,
         gallery,
-
+        blockedDates,
       });
 
       navigate("/stylists");
@@ -399,69 +415,114 @@ function removeAvailabilityDay(index) {
               Add Gallery Image
             </button>
           </div>
-<div>
-  <h2 className="text-2xl font-bold text-gray-900 mb-4">
-    Availability
-  </h2>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Availability
+            </h2>
 
-  <div className="space-y-4">
-    {availability.map((item, index) => (
-      <div
-        key={index}
-        className="border border-pink-100 rounded-2xl p-4 space-y-4"
-      >
-        <select
-          value={item.day}
-          onChange={(e) =>
-            handleAvailabilityDayChange(index, e.target.value)
-          }
-          className="w-full border border-pink-100 rounded-xl px-4 py-3"
-        >
-          {daysOfWeek.map((day) => (
-            <option key={day} value={day}>
-              {day}
-            </option>
-          ))}
-        </select>
+            <div className="space-y-4">
+              {availability.map((item, index) => (
+                <div
+                  key={index}
+                  className="border border-pink-100 rounded-2xl p-4 space-y-4"
+                >
+                  <select
+                    value={item.day}
+                    onChange={(e) =>
+                      handleAvailabilityDayChange(index, e.target.value)
+                    }
+                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
+                  >
+                    {daysOfWeek.map((day) => (
+                      <option key={day} value={day}>
+                        {day}
+                      </option>
+                    ))}
+                  </select>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {timeSlots.map((time) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {timeSlots.map((time) => (
+                      <button
+                        type="button"
+                        key={time}
+                        onClick={() => toggleAvailabilityTime(index, time)}
+                        className={`px-4 py-2 rounded-full border font-semibold ${
+                          item.times.includes(time)
+                            ? "bg-pink-500 text-white border-pink-500"
+                            : "text-pink-500 border-pink-300"
+                        }`}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+
+                  {availability.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeAvailabilityDay(index)}
+                      className="text-red-500 font-semibold"
+                    >
+                      Remove Day
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
             <button
               type="button"
-              key={time}
-              onClick={() => toggleAvailabilityTime(index, time)}
-              className={`px-4 py-2 rounded-full border font-semibold ${
-                item.times.includes(time)
-                  ? "bg-pink-500 text-white border-pink-500"
-                  : "text-pink-500 border-pink-300"
-              }`}
+              onClick={addAvailabilityDay}
+              className="mt-4 border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-2 rounded-full font-semibold transition"
             >
-              {time}
+              Add Availability Day
             </button>
-          ))}
-        </div>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Blocked / Vacation Dates
+            </h2>
 
-        {availability.length > 1 && (
-          <button
-            type="button"
-            onClick={() => removeAvailabilityDay(index)}
-            className="text-red-500 font-semibold"
-          >
-            Remove Day
-          </button>
-        )}
-      </div>
-    ))}
-  </div>
+            <div className="flex gap-3">
+              <input
+                type="date"
+                value={newBlockedDate}
+                onChange={(e) => setNewBlockedDate(e.target.value)}
+                className="flex-1 border border-pink-100 rounded-xl px-4 py-3"
+              />
 
-  <button
-    type="button"
-    onClick={addAvailabilityDay}
-    className="mt-4 border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-2 rounded-full font-semibold transition"
-  >
-    Add Availability Day
-  </button>
-</div>
+              <button
+                type="button"
+                onClick={addBlockedDate}
+                className="bg-pink-500 hover:bg-pink-600 text-white px-5 py-3 rounded-xl font-semibold transition"
+              >
+                Add
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-2">
+              {blockedDates.length === 0 ? (
+                <p className="text-gray-500">No blocked dates yet.</p>
+              ) : (
+                blockedDates.map((date) => (
+                  <div
+                    key={date}
+                    className="flex justify-between items-center bg-pink-50 rounded-xl px-4 py-3"
+                  >
+                    <span className="font-semibold text-gray-700">{date}</span>
+
+                    <button
+                      type="button"
+                      onClick={() => removeBlockedDate(date)}
+                      className="text-red-500 font-semibold"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
           <button
             disabled={uploading}
             className="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-full text-lg font-semibold transition disabled:opacity-60"

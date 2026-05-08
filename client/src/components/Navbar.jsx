@@ -48,6 +48,9 @@ function Navbar() {
               <Link to="/edit-stylist-profile" className="hover:text-pink-100">
                 Edit Profile
               </Link>
+              <Link to="/stylist-calendar" className="hover:text-pink-100">
+                Calendar
+              </Link>
             </>
           )}
 

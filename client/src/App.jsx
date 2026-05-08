@@ -16,7 +16,7 @@ import CreateStylistProfile from "./pages/CreateStylistProfile.jsx";
 import EditStylistProfile from "./pages/EditStylistProfile.jsx";
 import ManageUsers from "./pages/ManageUsers.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess.jsx";
-
+import StylistCalendar from "./pages/StylistCalendar.jsx";
 function App() {
   return (
     <Router>
@@ -82,6 +82,14 @@ function App() {
           element={
             <RoleRoute allowedRole="admin">
               <ManageUsers />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path="/stylist-calendar"
+          element={
+            <RoleRoute allowedRole="stylist">
+              <StylistCalendar />
             </RoleRoute>
           }
         />

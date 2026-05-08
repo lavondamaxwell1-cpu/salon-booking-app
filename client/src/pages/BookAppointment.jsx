@@ -6,22 +6,16 @@ import { getStylistById } from "../api/stylists";
 function BookAppointment() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [bookedTimes, setBookedTimes] = useState([]);
   const [stylist, setStylist] = useState(null);
   const [service, setService] = useState("");
   const [date, setDate] = useState("");
-  const [time, setTime] = useState("9:00 AM");
+  const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const availableTimes = [
-    "9:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "1:00 PM",
-    "2:00 PM",
-    "3:00 PM",
-  ];
+  const isBlockedDate = stylist?.blockedDates?.includes(date);
+  const [availableTimes, setAvailableTimes] = useState([]);
+
   useEffect(() => {
     async function fetchStylist() {
       try {
@@ -41,21 +35,51 @@ function BookAppointment() {
     fetchStylist();
   }, [id]);
   useEffect(() => {
-    async function fetchBookedTimes() {
-      if (!id || !date) return;
+    async function loadAvailableTimes() {
+      if (!stylist || !date) {
+        setAvailableTimes([]);
+        setTime("");
+        return;
+      }
+
+      const selectedDay = new Date(`${date}T12:00:00`).toLocaleDateString(
+        "en-US",
+        { weekday: "long" },
+      );
+
+      console.log("SELECTED DAY:", selectedDay);
+      console.log("STYLIST AVAILABILITY:", stylist.availability);
+
+      const availabilityForDay = stylist.availability?.find(
+        (item) => item.day === selectedDay,
+      );
+
+      if (!availabilityForDay) {
+        setAvailableTimes([]);
+        setTime("");
+        return;
+      }
 
       try {
-        const res = await getBookedTimes(id, date);
-        setBookedTimes(res.data);
+        const res = await getBookedTimes(stylist._id, date);
+        const bookedTimes = res.data;
+
+        const filteredTimes = availabilityForDay.times.filter(
+          (slot) => !bookedTimes.includes(slot),
+        );
+
+        setAvailableTimes(filteredTimes);
+        setTime("");
       } catch (error) {
         console.log(
-          error.response?.data?.message || "Failed to load booked times",
+          "BOOKED TIMES ERROR:",
+          error.response?.data || error.message,
         );
       }
     }
 
-    fetchBookedTimes();
-  }, [id, date]);
+    loadAvailableTimes();
+  }, [stylist, date]);
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -96,43 +120,45 @@ function BookAppointment() {
 
   return (
     <div className="min-h-screen bg-pink-50 px-6 py-16">
-      <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-lg p-8">
+      <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-lg p-8">
         <p className="text-pink-500 font-semibold uppercase tracking-widest mb-3">
           Book Appointment
         </p>
 
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">
-          Schedule with {stylist.name}
+        <h1 className="text-4xl font-bold text-gray-900 mb-8">
+          {stylist?.name}
         </h1>
 
-        <p className="text-gray-500 mb-8">{stylist.specialty}</p>
-
         {error && (
-          <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-5">
+          <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-6">
             {error}
           </p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* SERVICE */}
           <div>
             <label className="block text-gray-700 font-semibold mb-2">
-              Select Service
+              Service
             </label>
 
             <select
               value={service}
               onChange={(e) => setService(e.target.value)}
-              className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
+              className="w-full border border-pink-100 rounded-xl px-4 py-3"
             >
-              {stylist.services?.map((service) => (
-                <option key={service._id || service.name} value={service.name}>
-                  {service.name} — {service.price} · {service.duration}
+              <option value="">Select Service</option>
+
+              {stylist?.services?.map((item) => (
+                <option key={item._id || item.name} value={item.name}>
+                  {item.name} — {item.price}
                 </option>
               ))}
             </select>
           </div>
 
+          {/* APPOINTMENT DATE */}
           <div>
             <label className="block text-gray-700 font-semibold mb-2">
               Appointment Date
@@ -142,11 +168,18 @@ function BookAppointment() {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
               required
+              className="w-full border border-pink-100 rounded-xl px-4 py-3"
             />
+
+            {isBlockedDate && (
+              <p className="text-red-500 font-semibold mt-2">
+                This stylist is unavailable on this date.
+              </p>
+            )}
           </div>
 
+          {/* APPOINTMENT TIME */}
           <div>
             <label className="block text-gray-700 font-semibold mb-2">
               Appointment Time
@@ -155,35 +188,49 @@ function BookAppointment() {
             <select
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              required
+              disabled={!date || availableTimes.length === 0}
+              className="w-full border border-pink-100 rounded-xl px-4 py-3 disabled:opacity-60 disabled:cursor-not-allowed"
             >
+              <option value="">
+                {date ? "Select Available Time" : "Choose Date First"}
+              </option>
+
               {availableTimes.map((slot) => (
-                <option
-                  key={slot}
-                  value={slot}
-                  disabled={bookedTimes.includes(slot)}
-                >
-                  {slot} {bookedTimes.includes(slot) ? "(Booked)" : ""}
+                <option key={slot} value={slot}>
+                  {slot}
                 </option>
               ))}
             </select>
+
+            {date && availableTimes.length === 0 && (
+              <p className="text-red-500 font-semibold mt-2">
+                No available times for this date.
+              </p>
+            )}
           </div>
 
+          {/* NOTES */}
           <div>
             <label className="block text-gray-700 font-semibold mb-2">
-              Notes
+              Notes (Optional)
             </label>
 
             <textarea
-              rows="4"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Tell your stylist anything important..."
-              className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+              rows="4"
+              placeholder="Add appointment notes..."
+              className="w-full border border-pink-100 rounded-xl px-4 py-3"
             />
           </div>
 
-          <button className="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-full text-lg font-semibold transition">
+          {/* SUBMIT */}
+          <button
+            type="submit"
+            disabled={isBlockedDate}
+            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-full text-lg font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed"
+          >
             Confirm Booking
           </button>
         </form>
@@ -191,5 +238,4 @@ function BookAppointment() {
     </div>
   );
 }
-
 export default BookAppointment;

@@ -12,7 +12,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("customer");
   const [error, setError] = useState("");
-
+const [phone, setPhone] = useState("");
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -22,6 +22,7 @@ function Register() {
        name,
        email,
        password,
+       phone
      });
       login(res.data);
       navigate("/");
@@ -54,7 +55,14 @@ function Register() {
             className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
             required
           />
-
+          <input
+            type="tel"
+            placeholder="Phone Number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full border border-pink-100 rounded-xl px-4 py-3"
+            required
+          />
           <input
             type="email"
             placeholder="Email Address"
@@ -80,7 +88,6 @@ function Register() {
           >
             <option value="customer">Customer</option>
             <option value="stylist">Stylist</option>
-            
           </select>
 
           <button
