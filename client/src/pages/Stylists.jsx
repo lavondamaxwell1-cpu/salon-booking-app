@@ -72,11 +72,13 @@ function Stylists() {
                 key={stylist._id}
                 className="bg-white rounded-2xl sm:rounded-3xl shadow-lg overflow-hidden hover:-translate-y-1 sm:hover:-translate-y-2 transition"
               >
-                <img
-                  src={stylist.image}
-                  alt={stylist.name}
-                  className="w-full h-56 sm:h-64 lg:h-72 object-cover object-top"
-                />
+                <div className="bg-pink-50 p-3">
+                  <img
+                    src={stylist.image}
+                    alt={stylist.name}
+                    className="w-full aspect-[3/4] object-contain rounded-2xl"
+                  />
+                </div>
 
                 <div className="p-5 sm:p-6">
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-900 break-words">
