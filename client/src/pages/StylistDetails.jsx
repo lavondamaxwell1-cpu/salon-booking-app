@@ -110,7 +110,7 @@ async function handleReviewSubmit(e) {
              e.currentTarget.src =
                "https://placehold.co/600x800?text=Stylist+Image";
            }}
-           className="w-full h-[320px] sm:h-[420px] lg:h-[520px] object-cover rounded-2xl sm:rounded-3xl shadow-xl"
+           className="w-full max-h-[500px] object-contain bg-pink-50 rounded-2xl sm:rounded-3xl shadow-xl p-2"
          />
 
          {/* DETAILS */}
