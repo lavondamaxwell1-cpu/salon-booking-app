@@ -1,10 +1,21 @@
 import Stylist from "../models/Stylist.js";
 
 export async function createStylist(req, res) {
+  const existingStylist = await Stylist.findOne({
+    user: req.user._id,
+  });
+
+  if (existingStylist) {
+    return res.status(400).json({
+      message: "You already have a stylist profile",
+    });
+  }
+
   const stylist = await Stylist.create({
     ...req.body,
     user: req.user._id,
   });
+
   res.status(201).json(stylist);
 }
 
@@ -46,7 +57,9 @@ export async function updateMyStylistProfile(req, res) {
   stylist.image = req.body.image || stylist.image;
   stylist.services = req.body.services || stylist.services;
   stylist.gallery = req.body.gallery || stylist.gallery;
+  stylist.availability = req.body.availability || stylist.availability;
   stylist.blockedDates = req.body.blockedDates || stylist.blockedDates;
+
   const updatedStylist = await stylist.save();
 
   res.json(updatedStylist);
