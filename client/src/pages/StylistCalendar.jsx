@@ -204,24 +204,24 @@ function StylistCalendar() {
       setError(error.response?.data?.message || "Failed to update appointment");
     }
   }
+return (
+  <div className="min-h-screen bg-pink-50 px-4 sm:px-6 py-8 sm:py-16">
+    <div className="max-w-7xl mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-lg p-4 sm:p-6 overflow-x-auto">
+      <p className="text-pink-500 font-semibold uppercase tracking-widest mb-2 sm:mb-3 text-sm sm:text-base">
+        Stylist Schedule
+      </p>
 
-  return (
-    <div className="min-h-screen bg-pink-50 px-6 py-16">
-      <div className="max-w-7xl mx-auto bg-white rounded-3xl shadow-lg p-6">
-        <p className="text-pink-500 font-semibold uppercase tracking-widest mb-3">
-          Stylist Schedule
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+        Appointment Calendar
+      </h1>
+
+      {error && (
+        <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm sm:text-base">
+          {error}
         </p>
+      )}
 
-        <h1 className="text-4xl font-bold text-gray-900 mb-6">
-          Appointment Calendar
-        </h1>
-
-        {error && (
-          <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-6">
-            {error}
-          </p>
-        )}
-
+      <div className="min-w-[720px] md:min-w-0">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="timeGridWeek"
@@ -240,87 +240,90 @@ function StylistCalendar() {
           eventResize={handleEventResize}
         />
       </div>
-      {selectedAppointment && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center px-6 z-50">
-          <div className="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Appointment Details
-            </h2>
+    </div>
 
-            <div className="space-y-3 text-gray-700">
-              <p>
-                <span className="font-bold">Service:</span>{" "}
-                {selectedAppointment.service}
+    {selectedAppointment && (
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center px-4 sm:px-6 z-50">
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            Appointment Details
+          </h2>
+
+          <div className="space-y-3 text-gray-700 text-sm sm:text-base">
+            <p>
+              <span className="font-bold">Service:</span>{" "}
+              {selectedAppointment.service}
+            </p>
+
+            <p>
+              <span className="font-bold">Customer:</span>{" "}
+              {selectedAppointment.customer?.name || "Customer"}
+            </p>
+
+            <p className="break-all">
+              <span className="font-bold">Email:</span>{" "}
+              {selectedAppointment.customer?.email || "No email"}
+            </p>
+
+            <p>
+              <span className="font-bold">Date:</span>{" "}
+              {selectedAppointment.date}
+            </p>
+
+            <p>
+              <span className="font-bold">Time:</span>{" "}
+              {selectedAppointment.time}
+            </p>
+
+            <p>
+              <span className="font-bold">Status:</span>{" "}
+              {selectedAppointment.status}
+            </p>
+
+            <p>
+              <span className="font-bold">Payment:</span>{" "}
+              {selectedAppointment.paymentStatus}
+            </p>
+
+            {selectedAppointment.notes && (
+              <p className="break-words">
+                <span className="font-bold">Notes:</span>{" "}
+                {selectedAppointment.notes}
               </p>
+            )}
+          </div>
 
-              <p>
-                <span className="font-bold">Customer:</span>{" "}
-                {selectedAppointment.customer?.name || "Customer"}
-              </p>
+          <button
+            onClick={() => setSelectedAppointment(null)}
+            className="mt-6 w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-full font-semibold transition"
+          >
+            Close
+          </button>
 
-              <p>
-                <span className="font-bold">Email:</span>{" "}
-                {selectedAppointment.customer?.email || "No email"}
-              </p>
-
-              <p>
-                <span className="font-bold">Date:</span>{" "}
-                {selectedAppointment.date}
-              </p>
-
-              <p>
-                <span className="font-bold">Time:</span>{" "}
-                {selectedAppointment.time}
-              </p>
-
-              <p>
-                <span className="font-bold">Status:</span>{" "}
-                {selectedAppointment.status}
-              </p>
-
-              <p>
-                <span className="font-bold">Payment:</span>{" "}
-                {selectedAppointment.paymentStatus}
-              </p>
-
-              {selectedAppointment.notes && (
-                <p>
-                  <span className="font-bold">Notes:</span>{" "}
-                  {selectedAppointment.notes}
-                </p>
-              )}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+            <button
+              onClick={() =>
+                handleStatusUpdate(selectedAppointment._id, "Completed")
+              }
+              className="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-full font-semibold transition"
+            >
+              Complete
+            </button>
 
             <button
-              onClick={() => setSelectedAppointment(null)}
-              className="mt-6 w-full bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-full font-semibold transition"
+              onClick={() =>
+                handleStatusUpdate(selectedAppointment._id, "Canceled")
+              }
+              className="bg-red-500 hover:bg-red-600 text-white py-3 rounded-full font-semibold transition"
             >
-              Close
+              Cancel
             </button>
-            <div className="grid grid-cols-2 gap-3 mt-6">
-              <button
-                onClick={() =>
-                  handleStatusUpdate(selectedAppointment._id, "Completed")
-                }
-                className="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-full font-semibold transition"
-              >
-                Complete
-              </button>
-
-              <button
-                onClick={() =>
-                  handleStatusUpdate(selectedAppointment._id, "Canceled")
-                }
-                className="bg-red-500 hover:bg-red-600 text-white py-3 rounded-full font-semibold transition"
-              >
-                Cancel
-              </button>
-            </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+  </div>
+);
 }
 
 export default StylistCalendar;

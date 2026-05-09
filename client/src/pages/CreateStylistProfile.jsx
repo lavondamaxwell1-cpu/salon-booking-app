@@ -152,279 +152,289 @@ function CreateStylistProfile() {
     }
   }
 
-  return (
-    <div className="min-h-screen bg-pink-50 px-6 py-16">
-      <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-lg p-8">
-        <p className="text-pink-500 font-semibold uppercase tracking-widest mb-3">
-          Stylist Profile
+return (
+  <div className="min-h-screen bg-pink-50 px-4 sm:px-6 py-8 sm:py-16">
+    <div className="max-w-3xl mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-8">
+      {/* HEADER */}
+      <p className="text-pink-500 font-semibold uppercase tracking-widest mb-2 text-sm sm:text-base">
+        Stylist Profile
+      </p>
+
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">
+        Create Your Profile
+      </h1>
+
+      {/* ERROR */}
+      {error && (
+        <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-5 text-sm sm:text-base">
+          {error}
         </p>
+      )}
 
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">
-          Create Your Profile
-        </h1>
+      {/* UPLOAD STATUS */}
+      {uploading && (
+        <p className="bg-pink-100 text-pink-700 px-4 py-3 rounded-xl mb-5 font-semibold text-sm sm:text-base">
+          Uploading image...
+        </p>
+      )}
 
-        {error && (
-          <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-5">
-            {error}
-          </p>
-        )}
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {/* BASIC INFO */}
+        <input
+          type="text"
+          placeholder="Stylist Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-400"
+          required
+        />
 
-        {uploading && (
-          <p className="bg-pink-100 text-pink-700 px-4 py-3 rounded-xl mb-5 font-semibold">
-            Uploading image...
-          </p>
-        )}
+        <input
+          type="text"
+          placeholder="Specialty"
+          value={specialty}
+          onChange={(e) => setSpecialty(e.target.value)}
+          className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-400"
+          required
+        />
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        {/* PROFILE IMAGE */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">
+            Upload Profile Image
+          </label>
+
           <input
-            type="text"
-            placeholder="Stylist Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-            required
+            type="file"
+            accept="image/*"
+            onChange={handleProfileImageUpload}
+            className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+            required={!image}
           />
 
-          <input
-            type="text"
-            placeholder="Specialty"
-            value={specialty}
-            onChange={(e) => setSpecialty(e.target.value)}
-            className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-            required
-          />
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Upload Profile Image
-            </label>
-
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleProfileImageUpload}
-              className="w-full border border-pink-100 rounded-xl px-4 py-3"
-              required={!image}
+          {image && (
+            <img
+              src={image}
+              alt="Profile preview"
+              className="mt-4 w-full max-w-[160px] h-40 object-cover rounded-2xl"
             />
+          )}
+        </div>
 
-            {image && (
-              <img
-                src={image}
-                alt="Profile preview"
-                className="mt-4 w-40 h-40 object-cover rounded-2xl"
-              />
-            )}
-          </div>
+        {/* BIO */}
+        <textarea
+          rows="4"
+          placeholder="Bio"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-pink-400"
+          required
+        />
 
-          <textarea
-            rows="4"
-            placeholder="Bio"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            className="w-full border border-pink-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-            required
-          />
+        {/* SERVICES */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Services</h2>
 
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Services</h2>
+          <div className="space-y-4">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className="border border-pink-100 rounded-2xl p-4 space-y-3"
+              >
+                <input
+                  type="text"
+                  placeholder="Service Name"
+                  value={service.name}
+                  onChange={(e) =>
+                    handleServiceChange(index, "name", e.target.value)
+                  }
+                  className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+                  required
+                />
 
-            <div className="space-y-4">
-              {services.map((service, index) => (
-                <div
-                  key={index}
-                  className="border border-pink-100 rounded-2xl p-4 space-y-3"
-                >
-                  <input
-                    type="text"
-                    placeholder="Service Name"
-                    value={service.name}
-                    onChange={(e) =>
-                      handleServiceChange(index, "name", e.target.value)
-                    }
-                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
-                    required
-                  />
+                <input
+                  type="text"
+                  placeholder="Price ex: $85"
+                  value={service.price}
+                  onChange={(e) =>
+                    handleServiceChange(index, "price", e.target.value)
+                  }
+                  className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+                  required
+                />
 
-                  <input
-                    type="text"
-                    placeholder="Price ex: $85"
-                    value={service.price}
-                    onChange={(e) =>
-                      handleServiceChange(index, "price", e.target.value)
-                    }
-                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
-                    required
-                  />
+                <input
+                  type="text"
+                  placeholder="Duration ex: 1.5 hrs"
+                  value={service.duration}
+                  onChange={(e) =>
+                    handleServiceChange(index, "duration", e.target.value)
+                  }
+                  className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+                  required
+                />
 
-                  <input
-                    type="text"
-                    placeholder="Duration ex: 1.5 hrs"
-                    value={service.duration}
-                    onChange={(e) =>
-                      handleServiceChange(index, "duration", e.target.value)
-                    }
-                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
-                    required
-                  />
-
-                  {services.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeService(index)}
-                      className="text-red-500 font-semibold"
-                    >
-                      Remove Service
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={addService}
-              className="mt-4 border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-2 rounded-full font-semibold transition"
-            >
-              Add Service
-            </button>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Hairstyle Gallery
-            </h2>
-
-            <div className="space-y-4">
-              {gallery.map((item, index) => (
-                <div
-                  key={index}
-                  className="border border-pink-100 rounded-2xl p-4 space-y-3"
-                >
-                  <input
-                    type="text"
-                    placeholder="Style Title"
-                    value={item.title}
-                    onChange={(e) =>
-                      handleGalleryChange(index, "title", e.target.value)
-                    }
-                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
-                    required
-                  />
-
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      handleGalleryUpload(index, e.target.files[0])
-                    }
-                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
-                    required={!item.image}
-                  />
-
-                  {item.image && (
-                    <img
-                      src={item.image}
-                      alt={item.title || "Gallery preview"}
-                      className="w-40 h-40 object-cover rounded-2xl"
-                    />
-                  )}
-
-                  {gallery.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeGalleryImage(index)}
-                      className="text-red-500 font-semibold"
-                    >
-                      Remove Image
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={addGalleryImage}
-              className="mt-4 border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-2 rounded-full font-semibold transition"
-            >
-              Add Gallery Image
-            </button>
-          </div>
-
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Availability
-            </h2>
-
-            <div className="space-y-4">
-              {availability.map((item, index) => (
-                <div
-                  key={index}
-                  className="border border-pink-100 rounded-2xl p-4 space-y-4"
-                >
-                  <select
-                    value={item.day}
-                    onChange={(e) =>
-                      handleAvailabilityDayChange(index, e.target.value)
-                    }
-                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
+                {services.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeService(index)}
+                    className="text-red-500 font-semibold text-sm sm:text-base"
                   >
-                    {daysOfWeek.map((day) => (
-                      <option key={day} value={day}>
-                        {day}
-                      </option>
-                    ))}
-                  </select>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {timeSlots.map((time) => (
-                      <button
-                        type="button"
-                        key={time}
-                        onClick={() => toggleAvailabilityTime(index, time)}
-                        className={`px-4 py-2 rounded-full border font-semibold ${
-                          item.times.includes(time)
-                            ? "bg-pink-500 text-white border-pink-500"
-                            : "text-pink-500 border-pink-300"
-                        }`}
-                      >
-                        {time}
-                      </button>
-                    ))}
-                  </div>
-
-                  {availability.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeAvailabilityDay(index)}
-                      className="text-red-500 font-semibold"
-                    >
-                      Remove Day
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={addAvailabilityDay}
-              className="mt-4 border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-2 rounded-full font-semibold transition"
-            >
-              Add Availability Day
-            </button>
+                    Remove Service
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
 
           <button
-            disabled={uploading}
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-full text-lg font-semibold transition disabled:opacity-60"
+            type="button"
+            onClick={addService}
+            className="mt-4 w-full sm:w-auto border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-3 rounded-full font-semibold transition"
           >
-            Create Profile
+            Add Service
           </button>
-        </form>
-      </div>
+        </div>
+
+        {/* GALLERY */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Hairstyle Gallery
+          </h2>
+
+          <div className="space-y-4">
+            {gallery.map((item, index) => (
+              <div
+                key={index}
+                className="border border-pink-100 rounded-2xl p-4 space-y-3"
+              >
+                <input
+                  type="text"
+                  placeholder="Style Title"
+                  value={item.title}
+                  onChange={(e) =>
+                    handleGalleryChange(index, "title", e.target.value)
+                  }
+                  className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+                  required
+                />
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    handleGalleryUpload(index, e.target.files[0])
+                  }
+                  className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+                  required={!item.image}
+                />
+
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt={item.title || "Gallery preview"}
+                    className="w-full max-w-[160px] h-40 object-cover rounded-2xl"
+                  />
+                )}
+
+                {gallery.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeGalleryImage(index)}
+                    className="text-red-500 font-semibold text-sm sm:text-base"
+                  >
+                    Remove Image
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={addGalleryImage}
+            className="mt-4 w-full sm:w-auto border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-3 rounded-full font-semibold transition"
+          >
+            Add Gallery Image
+          </button>
+        </div>
+
+        {/* AVAILABILITY */}
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Availability
+          </h2>
+
+          <div className="space-y-4">
+            {availability.map((item, index) => (
+              <div
+                key={index}
+                className="border border-pink-100 rounded-2xl p-4 space-y-4"
+              >
+                <select
+                  value={item.day}
+                  onChange={(e) =>
+                    handleAvailabilityDayChange(index, e.target.value)
+                  }
+                  className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+                >
+                  {daysOfWeek.map((day) => (
+                    <option key={day} value={day}>
+                      {day}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {timeSlots.map((time) => (
+                    <button
+                      type="button"
+                      key={time}
+                      onClick={() => toggleAvailabilityTime(index, time)}
+                      className={`px-4 py-2 rounded-full border text-sm sm:text-base font-semibold ${
+                        item.times.includes(time)
+                          ? "bg-pink-500 text-white border-pink-500"
+                          : "text-pink-500 border-pink-300"
+                      }`}
+                    >
+                      {time}
+                    </button>
+                  ))}
+                </div>
+
+                {availability.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeAvailabilityDay(index)}
+                    className="text-red-500 font-semibold text-sm sm:text-base"
+                  >
+                    Remove Day
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={addAvailabilityDay}
+            className="mt-4 w-full sm:w-auto border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-3 rounded-full font-semibold transition"
+          >
+            Add Availability Day
+          </button>
+        </div>
+
+        {/* SUBMIT */}
+        <button
+          disabled={uploading}
+          className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition disabled:opacity-60"
+        >
+          Create Profile
+        </button>
+      </form>
     </div>
-  );
+  </div>
+);
 }
 
 export default CreateStylistProfile;

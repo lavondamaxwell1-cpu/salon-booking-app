@@ -91,170 +91,185 @@ async function handleReviewSubmit(e) {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-pink-50 px-6 py-16">
-      <div className="max-w-6xl mx-auto">
-        <Link to="/stylists" className="text-pink-500 font-semibold">
-          ← Back to Stylists
-        </Link>
+ return (
+   <div className="min-h-screen bg-pink-50 px-4 sm:px-6 py-8 sm:py-16">
+     <div className="max-w-6xl mx-auto">
+       <Link
+         to="/stylists"
+         className="text-pink-500 font-semibold text-sm sm:text-base"
+       >
+         ← Back to Stylists
+       </Link>
 
-        <div className="grid md:grid-cols-2 gap-10 mt-8 items-start">
-          <img
-            src={stylist.image}
-            alt={stylist.name}
-            onError={(e) => {
-              e.currentTarget.src =
-                "https://placehold.co/600x800?text=Stylist+Image";
-            }}
-            className="w-full h-[520px] object-cover rounded-3xl shadow-xl"
-          />
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 mt-8 items-start">
+         {/* IMAGE */}
+         <img
+           src={stylist.image}
+           alt={stylist.name}
+           onError={(e) => {
+             e.currentTarget.src =
+               "https://placehold.co/600x800?text=Stylist+Image";
+           }}
+           className="w-full h-[320px] sm:h-[420px] lg:h-[520px] object-cover rounded-2xl sm:rounded-3xl shadow-xl"
+         />
 
-          <div className="bg-white rounded-3xl shadow-lg p-8">
-            <p className="text-pink-500 font-semibold uppercase tracking-widest mb-3">
-              {stylist.specialty}
-            </p>
+         {/* DETAILS */}
+         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-8">
+           <p className="text-pink-500 font-semibold uppercase tracking-widest mb-2 sm:mb-3 text-sm sm:text-base">
+             {stylist.specialty}
+           </p>
 
-            <h1 className="text-5xl font-bold text-gray-900 mb-5">
-              {stylist.name}
-            </h1>
+           <h1 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-5 break-words">
+             {stylist.name}
+           </h1>
 
-            <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              {stylist.bio}
-            </p>
-            <p className="text-yellow-500 font-bold mb-8">
-              ⭐ {averageRating.toFixed(1)} / 5 ({totalReviews} reviews)
-            </p>
-            <h2 className="text-2xl font-bold text-gray-900 mb-5">Services</h2>
+           <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 break-words">
+             {stylist.bio}
+           </p>
 
-            <div className="space-y-4">
-              {stylist.services?.map((service) => (
-                <div
-                  key={service._id || service.name}
-                  className="border border-pink-100 rounded-2xl p-5 flex justify-between items-center"
-                >
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900">
-                      {service.name}
-                    </h3>
-                    <p className="text-gray-500">{service.duration}</p>
-                  </div>
+           <p className="text-yellow-500 font-bold mb-6 sm:mb-8 text-sm sm:text-base">
+             ⭐ {averageRating.toFixed(1)} / 5 ({totalReviews} reviews)
+           </p>
 
-                  <p className="text-pink-500 font-bold text-lg">
-                    {service.price}
-                  </p>
-                </div>
-              ))}
-            </div>
+           {/* SERVICES */}
+           <h2 className="text-2xl font-bold text-gray-900 mb-5">Services</h2>
 
-            {stylist.gallery?.length > 0 && (
-              <div className="mt-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-5">
-                  Hairstyle Gallery
-                </h2>
+           <div className="space-y-4">
+             {stylist.services?.map((service) => (
+               <div
+                 key={service._id || service.name}
+                 className="border border-pink-100 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+               >
+                 <div>
+                   <h3 className="text-lg font-bold text-gray-900">
+                     {service.name}
+                   </h3>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {stylist.gallery.map((item) => {
-                    console.log("GALLERY ITEM:", item);
+                   <p className="text-gray-500 text-sm sm:text-base">
+                     {service.duration}
+                   </p>
+                 </div>
 
-                    return (
-                      <div
-                        key={item._id || item.image}
-                        className="rounded-2xl overflow-hidden border border-pink-100 bg-white"
-                      >
-                        <img
-                          src={item.image?.trim()}
-                          alt={item.title}
-                          onError={(e) => {
-                            console.log("BAD IMAGE URL:", item.image);
-                            e.currentTarget.src =
-                              "https://placehold.co/600x400?text=Image+Not+Found";
-                          }}
-                          className="w-full h-48 object-cover"
-                        />
+                 <p className="text-pink-500 font-bold text-lg">
+                   {service.price}
+                 </p>
+               </div>
+             ))}
+           </div>
 
-                        <div className="p-3 bg-pink-50">
-                          <p className="font-semibold text-gray-800">
-                            {item.title}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-5">Reviews</h2>
+           {/* GALLERY */}
+           {stylist.gallery?.length > 0 && (
+             <div className="mt-8">
+               <h2 className="text-2xl font-bold text-gray-900 mb-5">
+                 Hairstyle Gallery
+               </h2>
 
-              {user?.role === "customer" && (
-                <form onSubmit={handleReviewSubmit} className="space-y-4 mb-6">
-                  {reviewError && (
-                    <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl">
-                      {reviewError}
-                    </p>
-                  )}
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 {stylist.gallery.map((item) => (
+                   <div
+                     key={item._id || item.image}
+                     className="rounded-2xl overflow-hidden border border-pink-100 bg-white"
+                   >
+                     <img
+                       src={item.image?.trim()}
+                       alt={item.title}
+                       onError={(e) => {
+                         e.currentTarget.src =
+                           "https://placehold.co/600x400?text=Image+Not+Found";
+                       }}
+                       className="w-full h-48 object-cover"
+                     />
 
-                  <select
-                    value={rating}
-                    onChange={(e) => setRating(Number(e.target.value))}
-                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
-                  >
-                    <option value={5}>5 Stars</option>
-                    <option value={4}>4 Stars</option>
-                    <option value={3}>3 Stars</option>
-                    <option value={2}>2 Stars</option>
-                    <option value={1}>1 Star</option>
-                  </select>
+                     <div className="p-3 bg-pink-50">
+                       <p className="font-semibold text-gray-800 text-sm sm:text-base break-words">
+                         {item.title}
+                       </p>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+             </div>
+           )}
 
-                  <textarea
-                    rows="3"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Leave a review..."
-                    className="w-full border border-pink-100 rounded-xl px-4 py-3"
-                    required
-                  />
+           {/* REVIEWS */}
+           <div className="mt-8">
+             <h2 className="text-2xl font-bold text-gray-900 mb-5">Reviews</h2>
 
-                  <button className="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-full font-semibold transition">
-                    Submit Review
-                  </button>
-                </form>
-              )}
+             {user?.role === "customer" && (
+               <form onSubmit={handleReviewSubmit} className="space-y-4 mb-6">
+                 {reviewError && (
+                   <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl text-sm sm:text-base">
+                     {reviewError}
+                   </p>
+                 )}
 
-              <div className="space-y-4">
-                {reviews.length === 0 ? (
-                  <p className="text-gray-500">No reviews yet.</p>
-                ) : (
-                  reviews.map((review) => (
-                    <div
-                      key={review._id}
-                      className="border border-pink-100 rounded-2xl p-4"
-                    >
-                      <p className="text-yellow-500 font-bold">
-                        {"⭐".repeat(review.rating)}
-                      </p>
+                 <select
+                   value={rating}
+                   onChange={(e) => setRating(Number(e.target.value))}
+                   className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+                 >
+                   <option value={5}>5 Stars</option>
+                   <option value={4}>4 Stars</option>
+                   <option value={3}>3 Stars</option>
+                   <option value={2}>2 Stars</option>
+                   <option value={1}>1 Star</option>
+                 </select>
 
-                      <p className="text-gray-700 mt-2">{review.comment}</p>
+                 <textarea
+                   rows="3"
+                   value={comment}
+                   onChange={(e) => setComment(e.target.value)}
+                   placeholder="Leave a review..."
+                   className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+                   required
+                 />
 
-                      <p className="text-gray-400 text-sm mt-2">
-                        By {review.customer?.name || "Customer"}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-            <Link
-              to={`/book/${stylist._id}`}
-              className="mt-8 block w-full text-center bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-full text-lg font-semibold transition"
-            >
-              Book Appointment
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+                 <button className="w-full sm:w-auto bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-full font-semibold transition">
+                   Submit Review
+                 </button>
+               </form>
+             )}
+
+             <div className="space-y-4">
+               {reviews.length === 0 ? (
+                 <p className="text-gray-500 text-sm sm:text-base">
+                   No reviews yet.
+                 </p>
+               ) : (
+                 reviews.map((review) => (
+                   <div
+                     key={review._id}
+                     className="border border-pink-100 rounded-2xl p-4"
+                   >
+                     <p className="text-yellow-500 font-bold">
+                       {"⭐".repeat(review.rating)}
+                     </p>
+
+                     <p className="text-gray-700 mt-2 text-sm sm:text-base break-words">
+                       {review.comment}
+                     </p>
+
+                     <p className="text-gray-400 text-sm mt-2">
+                       By {review.customer?.name || "Customer"}
+                     </p>
+                   </div>
+                 ))
+               )}
+             </div>
+           </div>
+
+           {/* BOOK BUTTON */}
+           <Link
+             to={`/book/${stylist._id}`}
+             className="mt-8 block w-full text-center bg-pink-500 hover:bg-pink-600 text-white py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition"
+           >
+             Book Appointment
+           </Link>
+         </div>
+       </div>
+     </div>
+   </div>
+ );
 }
 
 export default StylistDetails;

@@ -118,124 +118,124 @@ function BookAppointment() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-pink-50 px-6 py-16">
-      <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-lg p-8">
-        <p className="text-pink-500 font-semibold uppercase tracking-widest mb-3">
-          Book Appointment
-        </p>
+ return (
+   <div className="min-h-screen bg-pink-50 px-4 sm:px-6 py-10 sm:py-16">
+     <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-8">
+       <p className="text-pink-500 font-semibold uppercase tracking-widest mb-2 sm:mb-3 text-sm sm:text-base">
+         Book Appointment
+       </p>
 
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">
-          {stylist?.name}
-        </h1>
+       <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 break-words">
+         {stylist?.name}
+       </h1>
 
-        {error && (
-          <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-6">
-            {error}
-          </p>
-        )}
+       {error && (
+         <p className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm sm:text-base">
+           {error}
+         </p>
+       )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* SERVICE */}
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Service
-            </label>
+       <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+         {/* SERVICE */}
+         <div>
+           <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">
+             Service
+           </label>
 
-            <select
-              value={service}
-              onChange={(e) => setService(e.target.value)}
-              required
-              className="w-full border border-pink-100 rounded-xl px-4 py-3"
-            >
-              <option value="">Select Service</option>
+           <select
+             value={service}
+             onChange={(e) => setService(e.target.value)}
+             required
+             className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+           >
+             <option value="">Select Service</option>
 
-              {stylist?.services?.map((item) => (
-                <option key={item._id || item.name} value={item.name}>
-                  {item.name} — {item.price}
-                </option>
-              ))}
-            </select>
-          </div>
+             {stylist?.services?.map((item) => (
+               <option key={item._id || item.name} value={item.name}>
+                 {item.name} — {item.price}
+               </option>
+             ))}
+           </select>
+         </div>
 
-          {/* APPOINTMENT DATE */}
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Appointment Date
-            </label>
+         {/* DATE */}
+         <div>
+           <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">
+             Appointment Date
+           </label>
 
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-              className="w-full border border-pink-100 rounded-xl px-4 py-3"
-            />
+           <input
+             type="date"
+             value={date}
+             onChange={(e) => setDate(e.target.value)}
+             required
+             className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+           />
 
-            {isBlockedDate && (
-              <p className="text-red-500 font-semibold mt-2">
-                This stylist is unavailable on this date.
-              </p>
-            )}
-          </div>
+           {isBlockedDate && (
+             <p className="text-red-500 font-semibold mt-2 text-sm">
+               This stylist is unavailable on this date.
+             </p>
+           )}
+         </div>
 
-          {/* APPOINTMENT TIME */}
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Appointment Time
-            </label>
+         {/* TIME */}
+         <div>
+           <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">
+             Appointment Time
+           </label>
 
-            <select
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              required
-              disabled={!date || availableTimes.length === 0}
-              className="w-full border border-pink-100 rounded-xl px-4 py-3 disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              <option value="">
-                {date ? "Select Available Time" : "Choose Date First"}
-              </option>
+           <select
+             value={time}
+             onChange={(e) => setTime(e.target.value)}
+             required
+             disabled={!date || availableTimes.length === 0}
+             className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base disabled:opacity-60 disabled:cursor-not-allowed"
+           >
+             <option value="">
+               {date ? "Select Available Time" : "Choose Date First"}
+             </option>
 
-              {availableTimes.map((slot) => (
-                <option key={slot} value={slot}>
-                  {slot}
-                </option>
-              ))}
-            </select>
+             {availableTimes.map((slot) => (
+               <option key={slot} value={slot}>
+                 {slot}
+               </option>
+             ))}
+           </select>
 
-            {date && availableTimes.length === 0 && (
-              <p className="text-red-500 font-semibold mt-2">
-                No available times for this date.
-              </p>
-            )}
-          </div>
+           {date && availableTimes.length === 0 && (
+             <p className="text-red-500 font-semibold mt-2 text-sm">
+               No available times for this date.
+             </p>
+           )}
+         </div>
 
-          {/* NOTES */}
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Notes (Optional)
-            </label>
+         {/* NOTES */}
+         <div>
+           <label className="block text-gray-700 font-semibold mb-2 text-sm sm:text-base">
+             Notes (Optional)
+           </label>
 
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows="4"
-              placeholder="Add appointment notes..."
-              className="w-full border border-pink-100 rounded-xl px-4 py-3"
-            />
-          </div>
+           <textarea
+             value={notes}
+             onChange={(e) => setNotes(e.target.value)}
+             rows="4"
+             placeholder="Add appointment notes..."
+             className="w-full border border-pink-100 rounded-xl px-4 py-3 text-sm sm:text-base"
+           />
+         </div>
 
-          {/* SUBMIT */}
-          <button
-            type="submit"
-            disabled={isBlockedDate}
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-4 rounded-full text-lg font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            Confirm Booking
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+         {/* BUTTON */}
+         <button
+           type="submit"
+           disabled={isBlockedDate}
+           className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed"
+         >
+           Confirm Booking
+         </button>
+       </form>
+     </div>
+   </div>
+ );
 }
 export default BookAppointment;

@@ -10,86 +10,91 @@ function Navbar() {
     navigate("/");
   }
 
-  return (
-    <nav className="bg-pink-500 text-white shadow-md">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold tracking-wide">
-          GlowUp Salon
-        </Link>
+ return (
+   <nav className="bg-pink-500 text-white shadow-md">
+     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+       <Link
+         to="/"
+         className="text-2xl font-bold tracking-wide text-center lg:text-left"
+       >
+         GlowUp Salon
+       </Link>
 
-        <div className="flex gap-6 text-lg items-center">
-          <Link to="/" className="hover:text-pink-100">
-            Home
-          </Link>
+       <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-5 text-base lg:text-lg items-center justify-center lg:justify-end">
+         <Link to="/" className="hover:text-pink-100">
+           Home
+         </Link>
 
-          <Link to="/stylists" className="hover:text-pink-100">
-            Stylists
-          </Link>
+         <Link to="/stylists" className="hover:text-pink-100">
+           Stylists
+         </Link>
 
-          {user?.role === "customer" && (
-            <Link to="/my-appointments" className="hover:text-pink-100">
-              Appointments
-            </Link>
-          )}
+         {user?.role === "customer" && (
+           <Link to="/my-appointments" className="hover:text-pink-100">
+             Appointments
+           </Link>
+         )}
 
-          {user?.role === "stylist" && (
-            <>
-              <Link to="/stylist-dashboard" className="hover:text-pink-100">
-                Stylist Dashboard
-              </Link>
+         {user?.role === "stylist" && (
+           <>
+             <Link to="/stylist-dashboard" className="hover:text-pink-100">
+               Dashboard
+             </Link>
 
-              <Link
-                to="/create-stylist-profile"
-                className="hover:text-pink-100"
-              >
-                Create Profile
-              </Link>
+             <Link to="/create-stylist-profile" className="hover:text-pink-100">
+               Create Profile
+             </Link>
 
-              <Link to="/edit-stylist-profile" className="hover:text-pink-100">
-                Edit Profile
-              </Link>
-              <Link to="/stylist-calendar" className="hover:text-pink-100">
-                Calendar
-              </Link>
-            </>
-          )}
+             <Link to="/edit-stylist-profile" className="hover:text-pink-100">
+               Edit Profile
+             </Link>
 
-          {user?.role === "admin" && (
-            <>
-              <Link to="/admin-dashboard" className="hover:text-pink-100">
-                Admin Dashboard
-              </Link>
-              <Link to="/manage-users" className="hover:text-pink-100">
-                Manage Users
-              </Link>
-            </>
-          )}
-          {!user ? (
-            <>
-              <Link to="/login" className="hover:text-pink-100">
-                Login
-              </Link>
+             <Link to="/stylist-calendar" className="hover:text-pink-100">
+               Calendar
+             </Link>
+           </>
+         )}
 
-              <Link to="/register" className="hover:text-pink-100">
-                Register
-              </Link>
-            </>
-          ) : (
-            <>
-              <span className="font-semibold">Hi, {user.name}</span>
+         {user?.role === "admin" && (
+           <>
+             <Link to="/admin-dashboard" className="hover:text-pink-100">
+               Admin
+             </Link>
 
-              <button
-                onClick={handleLogout}
-                className="bg-white text-pink-500 px-4 py-2 rounded-full font-semibold hover:bg-pink-100 transition"
-              >
-                Logout
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </nav>
-  );
+             <Link to="/manage-users" className="hover:text-pink-100">
+               Users
+             </Link>
+           </>
+         )}
+
+         {!user ? (
+           <>
+             <Link to="/login" className="hover:text-pink-100">
+               Login
+             </Link>
+
+             <Link to="/register" className="hover:text-pink-100">
+               Register
+             </Link>
+           </>
+         ) : (
+           <>
+             <span className="font-semibold text-center break-words">
+               Hi, {user.name}
+             </span>
+
+             <button
+               onClick={handleLogout}
+               className="bg-white text-pink-500 px-4 py-2 rounded-full font-semibold hover:bg-pink-100 transition"
+             >
+               Logout
+             </button>
+           </>
+         )}
+       </div>
+     </div>
+   </nav>
+ );
 }
 
 export default Navbar;
