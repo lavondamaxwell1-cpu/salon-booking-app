@@ -40,6 +40,8 @@ export async function createAppointment(req, res) {
     date,
     time,
     notes,
+    status: "Pending",
+    paymentStatus: "Unpaid",
   });
 
   const customer = await User.findById(req.user._id);
