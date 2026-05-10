@@ -1,11 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { createAppointment, getBookedTimes } from "../api/appointments";
 import { getStylistById } from "../api/stylists";
 import { createCheckoutSession } from "../api/payments";
 function BookAppointment() {
   const { id } = useParams();
-  const navigate = useNavigate();
+
 
   const [stylist, setStylist] = useState(null);
   const [service, setService] = useState("");
