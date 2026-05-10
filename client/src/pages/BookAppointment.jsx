@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { createAppointment, getBookedTimes } from "../api/appointments";
 import { getStylistById } from "../api/stylists";
-
+import { createCheckoutSession } from "../api/payments";
 function BookAppointment() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -83,31 +83,33 @@ function BookAppointment() {
     loadAvailableTimes();
   }, [stylist, date]);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+ async function handleSubmit(e) {
+   e.preventDefault();
 
-    if (submitting) return;
+   if (submitting) return;
 
-    setSubmitting(true);
-    setError("");
+   setSubmitting(true);
+   setError("");
 
-    try {
-      const res = await createAppointment({
-        stylistId: stylist._id,
-        stylist: stylist.name,
-        service,
-        date,
-        time,
-        notes,
-      });
+   try {
+     const res = await createAppointment({
+       stylistId: stylist._id,
+       stylist: stylist.name,
+       service,
+       date,
+       time,
+       notes,
+     });
 
-      navigate(`/checkout/${res.data._id}`);
-    } catch (error) {
-      setError(error.response?.data?.message || "Booking failed");
-    } finally {
-      setSubmitting(false);
-    }
-  }
+     const paymentRes = await createCheckoutSession(res.data._id);
+
+     window.location.href = paymentRes.data.url;
+   } catch (error) {
+     setError(error.response?.data?.message || "Booking failed");
+   } finally {
+     setSubmitting(false);
+   }
+ }
 
   if (loading) {
     return (
