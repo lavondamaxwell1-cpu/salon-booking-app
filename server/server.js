@@ -25,7 +25,11 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://salon-booking-app-pi-lake.vercel.app",
+      "https://salon-booking-olzcftqef-lavondamaxwell1-cpus-projects.vercel.app",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
   },
 });
@@ -38,8 +42,17 @@ io.on("connection", (socket) => {
   });
 });
 
-app.use(cors());
-
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://salon-booking-app-pi-lake.vercel.app",
+      "https://salon-booking-olzcftqef-lavondamaxwell1-cpus-projects.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  }),
+);
 app.post(
   "/api/payments/webhook",
   express.raw({ type: "application/json" }),
