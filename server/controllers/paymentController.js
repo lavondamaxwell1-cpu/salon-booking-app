@@ -30,8 +30,8 @@ export async function createCheckoutSession(req, res) {
         quantity: 1,
       },
     ],
-    success_url: `${process.env.CLIENT_URL}/payment-success`,
-    cancel_url: `${process.env.CLIENT_URL}/my-appointments`,
+    success_url: "https://salon-booking-app-pi-lake.vercel.app/payment-success",
+    cancel_url: "https://salon-booking-app-pi-lake.vercel.app/my-appointments",
     metadata: {
       appointmentId: appointment._id.toString(),
     },
