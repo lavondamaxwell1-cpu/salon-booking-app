@@ -92,6 +92,8 @@ function BookAppointment() {
    setError("");
 
    try {
+     console.log("BOOKING STARTED");
+
      const res = await createAppointment({
        stylistId: stylist._id,
        stylist: stylist.name,
@@ -101,16 +103,32 @@ function BookAppointment() {
        notes,
      });
 
+     console.log("APPOINTMENT CREATED:", res.data);
+
      const paymentRes = await createCheckoutSession(res.data._id);
 
-     window.location.href = paymentRes.data.url;
+     console.log("STRIPE RESPONSE:", paymentRes.data);
+
+     if (paymentRes.data?.url) {
+       window.location.href = paymentRes.data.url;
+     } else {
+       setError("Stripe checkout URL was not returned.");
+     }
    } catch (error) {
-     setError(error.response?.data?.message || "Booking failed");
+     console.log(
+       "BOOKING/PAYMENT ERROR:",
+       error.response?.data || error.message,
+     );
+
+     setError(
+       error.response?.data?.message ||
+         error.response?.data?.error ||
+         "Booking failed",
+     );
    } finally {
      setSubmitting(false);
    }
  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-pink-50 flex items-center justify-center">
