@@ -30,8 +30,7 @@ export async function createAppointment(req, res) {
 
   if (existingAppointment) {
     return res.status(400).json({
-      message:
-        "This time slot is already booked. Please choose another time.",
+      message: "This time slot is already booked. Please choose another time.",
     });
   }
 
@@ -50,4 +49,30 @@ export async function createAppointment(req, res) {
   io.emit("appointmentCreated", appointment);
 
   res.status(201).json(appointment);
+}
+export async function cancelAppointment(req, res) {
+  const appointment = await Appointment.findById(req.params.id);
+
+  if (!appointment) {
+    return res.status(404).json({
+      message: "Appointment not found",
+    });
+  }
+
+  if (
+    appointment.customer.toString() !== req.user._id.toString() &&
+    req.user.role !== "admin"
+  ) {
+    return res.status(403).json({
+      message: "Not allowed to cancel this appointment",
+    });
+  }
+
+  appointment.status = "Canceled";
+
+  const updatedAppointment = await appointment.save();
+
+  io.emit("appointmentCanceled", updatedAppointment);
+
+  res.json(updatedAppointment);
 }
