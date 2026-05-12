@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getMyAppointments, cancelAppointment } from "../api/appointments";
-import { createCheckoutSession } from "../api/payments";
+// import { createCheckoutSession } from "../api/payments";
 function MyAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,14 +33,14 @@ async function handleCancel(id) {
   }
 }
 
-async function handlePay(appointmentId) {
-  try {
-    const res = await createCheckoutSession(appointmentId);
-    window.location.href = res.data.url;
-  } catch (error) {
-    setError(error.response?.data?.message || "Payment failed");
-  }
-}
+// async function handlePay(appointmentId) {
+//   try {
+//     const res = await createCheckoutSession(appointmentId);
+//     window.location.href = res.data.url;
+//   } catch (error) {
+//     setError(error.response?.data?.message || "Payment failed");
+//   }
+// }
   if (loading) {
     return (
       <div className="min-h-screen bg-pink-50 flex items-center justify-center">
@@ -119,7 +119,7 @@ async function handlePay(appointmentId) {
                  )}
                </div>
 
-               <div className="flex flex-col sm:flex-row md:flex-col gap-3 w-full md:w-auto">
+               {/* <div className="flex flex-col sm:flex-row md:flex-col gap-3 w-full md:w-auto">
                  {appointment.status !== "Canceled" && (
                    <button
                      onClick={() => handleCancel(appointment._id)}
@@ -127,19 +127,30 @@ async function handlePay(appointmentId) {
                    >
                      Cancel
                    </button>
-                 )}
+                 )} */}
 
-                 {appointment.paymentStatus !== "Paid" &&
-                   appointment.status !== "Canceled" && (
+                 <div className="flex flex-wrap gap-3 mt-4">
+                   <span
+                     className={`px-4 py-2 rounded-full font-semibold text-sm ${
+                       appointment.paymentStatus === "Paid"
+                         ? "bg-green-100 text-green-700"
+                         : "bg-yellow-100 text-yellow-700"
+                     }`}
+                   >
+                     {appointment.paymentStatus}
+                   </span>
+
+                   {appointment.status !== "Canceled" && (
                      <button
-                       onClick={() => handlePay(appointment._id)}
-                       className="w-full sm:w-auto bg-pink-500 hover:bg-pink-600 text-white px-5 py-3 rounded-full font-semibold transition"
+                       onClick={() => handleCancel(appointment._id)}
+                       className="border border-pink-500 text-pink-500 hover:bg-pink-500 hover:text-white px-5 py-2 rounded-full font-semibold transition"
                      >
-                       Pay Deposit
+                       Cancel
                      </button>
                    )}
+                 </div>
                </div>
-             </div>
+            //  </div>
            ))}
          </div>
        )}

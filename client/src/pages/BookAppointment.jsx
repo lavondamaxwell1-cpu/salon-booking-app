@@ -250,12 +250,21 @@ function BookAppointment() {
             />
           </div>
 
+          <div className="bg-pink-100 border border-pink-200 rounded-2xl p-4 text-sm sm:text-base text-gray-700">
+            <p className="font-semibold text-pink-600 mb-1">Deposit Required</p>
+
+            <p>
+              A non-refundable $25 deposit is required to secure your
+              appointment. The remaining balance will be paid at the salon.
+            </p>
+          </div>
+
           <button
             type="submit"
             disabled={isBlockedDate || submitting}
             className="w-full bg-pink-500 hover:bg-pink-600 text-white py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {submitting ? "Booking..." : "Confirm Booking"}
+            {submitting ? "Redirecting..." : "Book & Pay $25 Deposit"}
           </button>
         </form>
       </div>
